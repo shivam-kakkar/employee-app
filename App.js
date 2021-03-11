@@ -2,12 +2,13 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
+import Home from "./screens/Home";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hello Shivam</Text>
-      <StatusBar style="auto" />
+      <Home />
+      {/* <StatusBar style="auto" /> */}
     </View>
   );
 }
@@ -15,9 +16,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    marginTop: Constants.statusBarHeight,
-    alignItems: "center",
-    // justifyContent: "center",
+    backgroundColor: "#ebebeb",
+    // marginTop: Constants.statusBarHeight,
   },
 });
