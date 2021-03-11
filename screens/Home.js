@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import { Card } from "react-native-paper";
+import { StyleSheet, Text, View, Image, FlatList } from "react-native";
+import { Card, FAB } from "react-native-paper";
 
 const Home = () => {
   const data = [
@@ -8,10 +8,21 @@ const Home = () => {
     { id: 2, name: "suresh", position: "android expert" },
     { id: 3, name: "ramesh", position: "ML expert" },
     { id: 4, name: "hitesh", position: "web dev" },
+    { id: 5, name: "hitesh", position: "web dev" },
+    { id: 6, name: "hitesh", position: "web dev" },
+    { id: 7, name: "hitesh", position: "web dev" },
+    { id: 8, name: "hitesh", position: "web dev" },
+    { id: 9, name: "hitesh", position: "web dev" },
+    { id: 10, name: "hitesh", position: "web dev" },
+    { id: 11, name: "hitesh", position: "web dev" },
+    { id: 12, name: "hitesh", position: "web dev" },
+    { id: 13, name: "hitesh", position: "web dev" },
+    { id: 14, name: "hitesh", position: "web dev" },
+    { id: 15, name: "hitesh", position: "web dev" },
   ];
-  const renderList = data.map(item => {
+  const renderList = item => {
     return (
-      <Card style={styles.mycard} key={item.id}>
+      <Card style={styles.mycard}>
         <View style={styles.cardView}>
           <Image
             style={{ width: 60, height: 60, borderRadius: 30 }}
@@ -27,8 +38,25 @@ const Home = () => {
         </View>
       </Card>
     );
-  });
-  return <View>{renderList}</View>;
+  };
+  return (
+    <View>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => {
+          return renderList(item);
+        }}
+        keyExtractor={item => `${item.id}`}
+      />
+      <FAB
+        onPress={() => console.log("Pressed")}
+        style={styles.fab}
+        small={false}
+        icon="plus"
+        theme={{ colors: { accent: "#0073ff" } }}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -42,6 +70,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 
