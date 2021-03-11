@@ -2,27 +2,52 @@ import React from "react";
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
 import { Card, FAB } from "react-native-paper";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const data = [
-    { id: 1, name: "mukesh", position: "web dev" },
-    { id: 2, name: "suresh", position: "android expert" },
-    { id: 3, name: "ramesh", position: "ML expert" },
-    { id: 4, name: "hitesh", position: "web dev" },
-    { id: 5, name: "hitesh", position: "web dev" },
-    { id: 6, name: "hitesh", position: "web dev" },
-    { id: 7, name: "hitesh", position: "web dev" },
-    { id: 8, name: "hitesh", position: "web dev" },
-    { id: 9, name: "hitesh", position: "web dev" },
-    { id: 10, name: "hitesh", position: "web dev" },
-    { id: 11, name: "hitesh", position: "web dev" },
-    { id: 12, name: "hitesh", position: "web dev" },
-    { id: 13, name: "hitesh", position: "web dev" },
-    { id: 14, name: "hitesh", position: "web dev" },
-    { id: 15, name: "hitesh", position: "web dev" },
+    {
+      id: "1",
+      name: "mukesh",
+      email: "mukesh@abc.com",
+      salary: "5 LPA",
+      phone: "123",
+      position: "web dev",
+      picture:
+        "https://images.unsplash.com/photo-1569466896818-335b1bedfcce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+      id: "2",
+      name: "suresh",
+      email: "suresh@abc.com",
+      salary: "6 LPA",
+      phone: "456",
+      position: "android expert",
+      picture:
+        "https://images.unsplash.com/photo-1569466896818-335b1bedfcce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+      id: "3",
+      name: "ramesh",
+      email: "ramesh@abc.com",
+      salary: "7 LPA",
+      phone: "789",
+      position: "ML expert",
+      picture:
+        "https://images.unsplash.com/photo-1569466896818-335b1bedfcce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+      id: "4",
+      name: "hitesh",
+      email: "hitesh@abc.com",
+      salary: "8 LPA",
+      phone: "730",
+      position: "web dev",
+      picture:
+        "https://images.unsplash.com/photo-1569466896818-335b1bedfcce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    },
   ];
   const renderList = item => {
     return (
-      <Card style={styles.mycard}>
+      <Card style={styles.mycard} onPress={() => navigation.navigate("Profile", { item })}>
         <View style={styles.cardView}>
           <Image
             style={{ width: 60, height: 60, borderRadius: 30 }}
@@ -40,16 +65,16 @@ const Home = () => {
     );
   };
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={data}
         renderItem={({ item }) => {
           return renderList(item);
         }}
-        keyExtractor={item => `${item.id}`}
+        keyExtractor={item => item.id}
       />
       <FAB
-        onPress={() => console.log("Pressed")}
+        onPress={() => navigation.navigate("Create")}
         style={styles.fab}
         small={false}
         icon="plus"
