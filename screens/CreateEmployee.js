@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native-paper";
+import { StyleSheet, Text, View, Modal } from "react-native";
+import { TextInput, Button } from "react-native-paper";
 
 const CreateEmployee = () => {
   const [name, setName] = useState("");
@@ -54,6 +54,56 @@ const CreateEmployee = () => {
         mode="outlined"
         onChangeText={text => setPosition(text)}
       />
+      <Button
+        style={styles.inputStyle}
+        icon="upload"
+        mode="contained"
+        theme={theme}
+        onPress={() => setModal(true)}
+      >
+        Upload Image
+      </Button>
+      <Button
+        style={styles.inputStyle}
+        icon="content-save"
+        mode="contained"
+        theme={theme}
+        onPress={() => console.log("Pressed")}
+      >
+        save
+      </Button>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modal}
+        onRequestClose={() => {
+          setModal(false);
+        }}
+      >
+        <View style={styles.modalView}>
+          <View style={styles.modalButtonView}>
+            <Button
+              icon="camera"
+              theme={theme}
+              mode="contained"
+              onPress={() => console.log("Pressed")}
+            >
+              camera
+            </Button>
+            <Button
+              icon="image-area"
+              theme={theme}
+              mode="contained"
+              onPress={() => console.log("Pressed")}
+            >
+              gallery
+            </Button>
+          </View>
+          <Button theme={theme} onPress={() => setModal(false)}>
+            cancel
+          </Button>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -70,6 +120,17 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     margin: 5,
+  },
+  modalView: {
+    position: "absolute",
+    bottom: 2,
+    width: "100%",
+    backgroundColor: "white",
+  },
+  modalButtonView: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
   },
 });
 
