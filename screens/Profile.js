@@ -8,14 +8,14 @@ const Profile = props => {
   const { _id, name, email, salary, phone, position, picture } = props.route.params.item;
 
   const deleteEmployee = () => {
-    fetch("http://858b6f156b09.ngrok.io/delete", {
-      method: "post",
+    fetch(`http://6e70fc8d4d01.ngrok.io/${_id}`, {
+      method: "delete",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        id: _id,
-      }),
+      // body: JSON.stringify({
+      //   id: _id,
+      // }),
     })
       .then(res => res.json())
       .then(deletedEmp => {

@@ -1,29 +1,8 @@
 const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-require("./Employee");
+const router = express.Router();
+const Employee = require("./Employee");
 
-app.use(bodyParser.json());
-
-const Employee = mongoose.model("employee");
-
-const mongoUri = "mongodb://localhost:27017/employeeapp";
-
-mongoose.connect(mongoUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-mongoose.connection.on("connected", () => {
-  console.log("connected to mongo");
-});
-
-mongoose.connection.on("error", err => {
-  console.log("error", err);
-});
-
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
   Employee.find({})
     .then(data => {
       res.send(data);
@@ -33,7 +12,7 @@ app.get("/", (req, res) => {
     });
 });
 
-app.post("/send-data", (req, res) => {
+router.post("/", (req, res) => {
   const employee = new Employee({
     name: req.body.name,
     email: req.body.email,
@@ -45,7 +24,6 @@ app.post("/send-data", (req, res) => {
   employee
     .save()
     .then(data => {
-      console.log(data);
       res.send(data);
     })
     .catch(err => {
@@ -53,10 +31,9 @@ app.post("/send-data", (req, res) => {
     });
 });
 
-app.post("/delete", (req, res) => {
-  Employee.findByIdAndRemove(req.body.id)
+router.delete("/:id", (req, res) => {
+  Employee.findByIdAndRemove(req.params.id)
     .then(data => {
-      console.log(data);
       res.send(data);
     })
     .catch(err => {
@@ -64,8 +41,8 @@ app.post("/delete", (req, res) => {
     });
 });
 
-app.post("/update", (req, res) => {
-  Employee.findByIdAndUpdate(req.body.id, {
+router.patch("/:id", (req, res) => {
+  Employee.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
@@ -74,7 +51,6 @@ app.post("/update", (req, res) => {
     position: req.body.position,
   })
     .then(data => {
-      console.log(data);
       res.send(data);
     })
     .catch(err => {
@@ -82,6 +58,4 @@ app.post("/update", (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-  console.log("server running");
-});
+module.exports = router;

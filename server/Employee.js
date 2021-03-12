@@ -9,4 +9,6 @@ const EmployeeSchema = new mongoose.Schema({
   position: String,
 });
 
-mongoose.model("employee", EmployeeSchema);
+const Employee = mongoose.model("employee", EmployeeSchema);
+
+module.exports = Employee;

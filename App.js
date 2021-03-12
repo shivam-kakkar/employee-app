@@ -34,7 +34,7 @@ function App() {
           options={{ ...myOptions, title: "Profile" }}
         />
       </Stack.Navigator>
-      {/* <StatusBar style="auto" /> */}
+      <StatusBar style="auto" />
     </View>
   );
 }
