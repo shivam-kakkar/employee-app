@@ -5,17 +5,38 @@ import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 
-const CreateEmployee = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [salary, setSalary] = useState("");
-  const [picture, setPicture] = useState("");
-  const [position, setPosition] = useState("");
+const CreateEmployee = ({ navigation, route }) => {
+  const getDetails = type => {
+    if (route.params) {
+      switch (type) {
+        case "name":
+          return route.params.name;
+        case "phone":
+          return route.params.phone;
+        case "email":
+          return route.params.email;
+        case "salary":
+          return route.params.salary;
+        case "picture":
+          return route.params.picture;
+        case "position":
+          return route.params.position;
+      }
+    }
+    return "";
+  };
+
+  const [name, setName] = useState(getDetails("name"));
+  const [phone, setPhone] = useState(getDetails("phone"));
+  const [email, setEmail] = useState(getDetails("email"));
+  const [salary, setSalary] = useState(getDetails("salary"));
+  const [picture, setPicture] = useState(getDetails("picture"));
+  const [position, setPosition] = useState(getDetails("position"));
   const [modal, setModal] = useState(false);
+  const [enableShift, setenableShift] = useState(false);
 
   const submitData = () => {
-    fetch("http://6c527b250ae4.ngrok.io/send-data", {
+    fetch("http://858b6f156b09.ngrok.io/send-data", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -32,6 +53,32 @@ const CreateEmployee = ({ navigation }) => {
       .then(res => res.json())
       .then(data => {
         Alert.alert(`${data.name} is saved successfully`);
+        navigation.navigate("Home");
+      })
+      .catch(err => {
+        Alert.alert("Something went wrong");
+      });
+  };
+
+  const updateDetails = () => {
+    fetch("http://858b6f156b09.ngrok.io/update", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: route.params._id,
+        name,
+        email,
+        phone,
+        salary,
+        picture,
+        position,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        Alert.alert(`${data.name} is updated successfully`);
         navigation.navigate("Home");
       })
       .catch(err => {
@@ -107,94 +154,113 @@ const CreateEmployee = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.root}>
-      <TextInput
-        label="Name"
-        style={styles.inputStyle}
-        value={name}
-        theme={theme}
-        mode="outlined"
-        onChangeText={text => setName(text)}
-      />
-      <TextInput
-        label="Email"
-        style={styles.inputStyle}
-        value={email}
-        theme={theme}
-        mode="outlined"
-        onChangeText={text => setEmail(text)}
-      />
-      <TextInput
-        label="Phone"
-        style={styles.inputStyle}
-        value={phone}
-        theme={theme}
-        keyboardType="number-pad"
-        mode="outlined"
-        onChangeText={text => setPhone(text)}
-      />
-      <TextInput
-        label="Salary"
-        style={styles.inputStyle}
-        value={salary}
-        theme={theme}
-        mode="outlined"
-        onChangeText={text => setSalary(text)}
-      />
-      <TextInput
-        label="Position"
-        style={styles.inputStyle}
-        value={position}
-        theme={theme}
-        mode="outlined"
-        onChangeText={text => setPosition(text)}
-      />
-      <Button
-        style={styles.inputStyle}
-        icon={picture == "" ? "upload" : "check"}
-        mode="contained"
-        theme={theme}
-        onPress={() => setModal(true)}
-      >
-        Upload Image
-      </Button>
-      <Button
-        style={styles.inputStyle}
-        icon="content-save"
-        mode="contained"
-        theme={theme}
-        onPress={() => submitData()}
-      >
-        save
-      </Button>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modal}
-        onRequestClose={() => {
-          setModal(false);
-        }}
-      >
-        <View style={styles.modalView}>
-          <View style={styles.modalButtonView}>
-            <Button icon="camera" theme={theme} mode="contained" onPress={() => pickFromCamera()}>
-              camera
-            </Button>
-            <Button
-              icon="image-area"
-              theme={theme}
-              mode="contained"
-              onPress={() => pickFromGallery()}
-            >
-              gallery
+    <KeyboardAvoidingView behavior="position" style={styles.root} enabled={enableShift}>
+      <View>
+        <TextInput
+          label="Name"
+          style={styles.inputStyle}
+          value={name}
+          theme={theme}
+          onFocus={() => setenableShift(false)}
+          mode="outlined"
+          onChangeText={text => setName(text)}
+        />
+        <TextInput
+          label="Email"
+          style={styles.inputStyle}
+          value={email}
+          theme={theme}
+          onFocus={() => setenableShift(false)}
+          mode="outlined"
+          onChangeText={text => setEmail(text)}
+        />
+        <TextInput
+          label="Phone"
+          style={styles.inputStyle}
+          value={phone}
+          theme={theme}
+          onFocus={() => setenableShift(false)}
+          keyboardType="number-pad"
+          mode="outlined"
+          onChangeText={text => setPhone(text)}
+        />
+        <TextInput
+          label="Salary"
+          style={styles.inputStyle}
+          value={salary}
+          theme={theme}
+          onFocus={() => setenableShift(true)}
+          mode="outlined"
+          onChangeText={text => setSalary(text)}
+        />
+        <TextInput
+          label="Position"
+          style={styles.inputStyle}
+          value={position}
+          theme={theme}
+          onFocus={() => setenableShift(true)}
+          mode="outlined"
+          onChangeText={text => setPosition(text)}
+        />
+        <Button
+          style={styles.inputStyle}
+          icon={picture == "" ? "upload" : "check"}
+          mode="contained"
+          theme={theme}
+          onPress={() => setModal(true)}
+        >
+          Upload Image
+        </Button>
+        {route.params ? (
+          <Button
+            style={styles.inputStyle}
+            icon="content-save"
+            mode="contained"
+            theme={theme}
+            onPress={() => updateDetails()}
+          >
+            Update details
+          </Button>
+        ) : (
+          <Button
+            style={styles.inputStyle}
+            icon="content-save"
+            mode="contained"
+            theme={theme}
+            onPress={() => submitData()}
+          >
+            save
+          </Button>
+        )}
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modal}
+          onRequestClose={() => {
+            setModal(false);
+          }}
+        >
+          <View style={styles.modalView}>
+            <View style={styles.modalButtonView}>
+              <Button icon="camera" theme={theme} mode="contained" onPress={() => pickFromCamera()}>
+                camera
+              </Button>
+              <Button
+                icon="image-area"
+                theme={theme}
+                mode="contained"
+                onPress={() => pickFromGallery()}
+              >
+                gallery
+              </Button>
+            </View>
+            <Button theme={theme} onPress={() => setModal(false)}>
+              cancel
             </Button>
           </View>
-          <Button theme={theme} onPress={() => setModal(false)}>
-            cancel
-          </Button>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

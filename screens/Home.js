@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator, Alert } from "react-native";
+import { StyleSheet, Text, View, Image, FlatList, Alert } from "react-native";
 import { Card, FAB } from "react-native-paper";
 
 const Home = ({ navigation }) => {
@@ -7,7 +7,7 @@ const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
-    fetch("http://6c527b250ae4.ngrok.io/")
+    fetch("http://858b6f156b09.ngrok.io/")
       .then(res => res.json())
       .then(results => {
         setData(results);
@@ -42,17 +42,15 @@ const Home = ({ navigation }) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      {loading ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <FlatList
-          data={data}
-          renderItem={({ item }) => {
-            return renderList(item);
-          }}
-          keyExtractor={item => item._id}
-        />
-      )}
+      <FlatList
+        data={data}
+        renderItem={({ item }) => {
+          return renderList(item);
+        }}
+        keyExtractor={item => item._id}
+        onRefresh={() => fetchData()}
+        refreshing={loading}
+      />
 
       <FAB
         onPress={() => navigation.navigate("Create")}
