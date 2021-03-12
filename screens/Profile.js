@@ -5,7 +5,7 @@ import { Title, Card, Button } from "react-native-paper";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 
 const Profile = props => {
-  const { id, name, email, salary, phone, position, picture } = props.route.params.item;
+  const { _id, name, email, salary, phone, position, picture } = props.route.params.item;
 
   const openDial = () => {
     if (Platform.OS === "android") {

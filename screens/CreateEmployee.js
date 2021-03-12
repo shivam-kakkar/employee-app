@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Modal, Alert } from "react-native";
+import { StyleSheet, Text, View, Modal, Alert, KeyboardAvoidingView } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 
-const CreateEmployee = () => {
+const CreateEmployee = ({ navigation }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -13,6 +13,31 @@ const CreateEmployee = () => {
   const [picture, setPicture] = useState("");
   const [position, setPosition] = useState("");
   const [modal, setModal] = useState(false);
+
+  const submitData = () => {
+    fetch("http://6c527b250ae4.ngrok.io/send-data", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        salary,
+        picture,
+        position,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        Alert.alert(`${data.name} is saved successfully`);
+        navigation.navigate("Home");
+      })
+      .catch(err => {
+        Alert.alert("Something went wrong");
+      });
+  };
 
   const pickFromGallery = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -138,7 +163,7 @@ const CreateEmployee = () => {
         icon="content-save"
         mode="contained"
         theme={theme}
-        onPress={() => console.log("Pressed")}
+        onPress={() => submitData()}
       >
         save
       </Button>
